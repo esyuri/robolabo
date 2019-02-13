@@ -56,9 +56,9 @@ class Quaternion:
 
         if x is not None and y is not None and z is not None:  #w_or_qはスカラー（ｗ）
             w = w_or_q
-            q = np.array([w, x, y, z])　　　　　　　　　　　　　　　　#w_or_qは四元数のベクトル（q）
+            q = np.array([w, x, y, z])           #w_or_qは四元数のベクトル（q）
         elif isinstance(w_or_q, Quaternion):   #w_or_qがクラスQuaternionの要素（インスタンス）であるならば
-            q = np.array(w_or_q.q)　　　　　　　
+            q = np.array(w_or_q.q)
         else:
             q = np.array(w_or_q)
             if len(q) != 4:

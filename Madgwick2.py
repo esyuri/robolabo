@@ -28,7 +28,7 @@
 import warnings
 import numpy as np
 from numpy.linalg import norm
-from .quaternion import Quaternion
+from quaternion import Quaternion
 
 
 """
@@ -66,73 +66,7 @@ class MadgwickAHRS:
         if beta is not None:
             self.beta = beta
 
-    def update(self, gyroscope, accelerometer, magnetometer):　　　　　　　　　　#９軸の場合の関数（使わない）
-        """
-        Perform one update step with data from a AHRS sensor array
-        :param gyroscope: A three-element array containing the gyroscope data in radians per second.
-        :param accelerometer: A three-element array containing the accelerometer data. Can be any unit since a normalized value is used.
-        :param magnetometer: A three-element array containing the magnetometer data. Can be any unit since a normalized value is used.
-        :return:
-        
-        AHRSセンサーアレイからのデータを使用して1つの更新手順を実行する　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　AHRSセンサーアレイ＝ジャイロスコープ
-         ：param gyroscope：ジャイロスコープのデータを1秒あたりのラジアンで含む3要素の配列。
-         ：param accelerometer：加速度計データを含む3要素の配列。 正規化された値が使用されるので、どんな単位でも構いません。
-         ：param magnetometer：磁力計データを含む3要素の配列。 正規化された値が使用されるので、どんな単位でも構いません。　　　　　　←磁気センサーは今回ないので修正の必要あり
-         ：return：
-        """
-        q = self.quaternion
-
-        gyroscope = np.array(gyroscope, dtype=float).flatten()
-        accelerometer = np.array(accelerometer, dtype=float).flatten()
-		#magnetometer = np.array(magnetometer, dtype=float).flatten()
-
-        # Normalise accelerometer measurement　加速度計の測定値を正規化する
-        if norm(accelerometer) is 0:
-            warnings.warn("accelerometer is zero")
-            return
-        accelerometer /= norm(accelerometer)
-
-        # Normalise magnetometer measurement　磁力計測定を正規化する
-        """
-        if norm(magnetometer) is 0:
-            warnings.warn("magnetometer is zero")
-            return
-        magnetometer /= norm(magnetometer)
-		
-        h = q * (Quaternion(0, magnetometer[0], magnetometer[1], magnetometer[2]) * q.conj())
-        b = np.array([0, norm(h[1:3]), 0, h[3]])
-        """
-
-        # Gradient descent algorithm corrective step　勾配降下アルゴリズム修正ステップ
-        f = np.array([
-            2*(q[1]*q[3] - q[0]*q[2]) - accelerometer[0],
-            2*(q[0]*q[1] + q[2]*q[3]) - accelerometer[1],
-            2*(0.5 - q[1]**2 - q[2]**2) - accelerometer[2],
-            2*b[1]*(0.5 - q[2]**2 - q[3]**2) + 2*b[3]*(q[1]*q[3] - q[0]*q[2]) - magnetometer[0],
-            2*b[1]*(q[1]*q[2] - q[0]*q[3]) + 2*b[3]*(q[0]*q[1] + q[2]*q[3]) - magnetometer[1],
-            2*b[1]*(q[0]*q[2] + q[1]*q[3]) + 2*b[3]*(0.5 - q[1]**2 - q[2]**2) - magnetometer[2]
-          
-        ])
-        j = np.array([
-            [-2*q[2],                  2*q[3],                  -2*q[0],                  2*q[1]],
-            [2*q[1],                   2*q[0],                  2*q[3],                   2*q[2]],
-            [0,                        -4*q[1],                 -4*q[2],                  0]	,
-            [-2*b[3]*q[2],             2*b[3]*q[3],             -4*b[1]*q[2]-2*b[3]*q[0], -4*b[1]*q[3]+2*b[3]*q[1]],
-            [-2*b[1]*q[3]+2*b[3]*q[1], 2*b[1]*q[2]+2*b[3]*q[0], 2*b[1]*q[1]+2*b[3]*q[3],  -2*b[1]*q[0]+2*b[3]*q[2]],
-            [2*b[1]*q[2],              2*b[1]*q[3]-4*b[3]*q[1], 2*b[1]*q[0]-4*b[3]*q[2],  2*b[1]*q[1]]
-            
-        ])
-        step = j.T.dot(f)  #転置
-        step /= norm(step)  # normalise step magnitude　ステップの大きさを正規化する
-
-        # Compute rate of change of quaternion　四元数の変化率を計算する
-        qdot = (q * Quaternion(0, gyroscope[0], gyroscope[1], gyroscope[2])) * 0.5 - self.beta * step.T
-
-        # Integrate to yield quaternion　四元数を生成するために積分する
-        q += qdot * self.samplePeriod
-        self.quaternion = Quaternion(q / norm(q))  # normalise quaternion　四元数を正規化する
-
-    def update_imu(self, gyroscope, accelerometer):　　　　　　　　　　　　　　　　　#６軸の場合の関数
+    def update_imu(self, gyroscope, accelerometer):          #６軸の場合の関数
         """
         Perform one update step with data from a IMU sensor array
         :param gyroscope: A three-element array containing the gyroscope data in radians per second.
@@ -145,7 +79,7 @@ class MadgwickAHRS:
         q = self.quaternion
 
         gyroscope = np.array(gyroscope, dtype=float).flatten()
-        ac
+        accelerometer = np.array(accelerometer, dtype=float).flatten()
 
         # Normalise accelerometer measurement　加速度計の測定値を正規化する
         if norm(accelerometer) is 0:
@@ -173,3 +107,12 @@ class MadgwickAHRS:
         # Integrate to yield quaternion　四元数を生成するために積分する
         q += qdot * self.samplePeriod
         self.quaternion = Quaternion(q / norm(q))  # normalise quaternion　四元数を正規化する
+        
+        q_w = self.quaternion[0]
+        q_x = self.quaternion[1]
+        q_y = self.quaternion[2]
+        q_z = self.quaternion[3]
+        print([q_w, q_x, q_y, q_z])
+        
+        
+       

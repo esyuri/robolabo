@@ -85,6 +85,6 @@ def get_gyro_data():
     
     return [g_x, g_y, g_z]
 
-while 1:
-    print(get_accel_data() + get_gyro_data())
-    sleep(1)
+#while 1:
+    #print(get_accel_data() + get_gyro_data())
+    #sleep(1)
