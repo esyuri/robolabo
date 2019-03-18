@@ -87,4 +87,4 @@ def get_gyro_data():
 
 #while 1:
     #print(get_accel_data() + get_gyro_data())
-    #sleep(1)
+    #sleep(1/64)

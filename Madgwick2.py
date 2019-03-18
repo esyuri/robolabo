@@ -41,7 +41,7 @@ from .quaternion import Quaternion　　　　四元数←同サイトにある�
 
 
 class MadgwickAHRS:
-    samplePeriod = 1/256
+    samplePeriod = 1/64
     quaternion = Quaternion(1, 0, 0, 0)
     beta = 1
 
@@ -113,6 +113,26 @@ class MadgwickAHRS:
         q_y = self.quaternion[2]
         q_z = self.quaternion[3]
         print([q_w, q_x, q_y, q_z])
+        
+        
+        
+        #四元数からオイラー角に変換、確認用 
+        #定義域はーπ/2からπ/2。かたむけすぎに注意
+        import math
+        e11=q_w*q_w+q_x*q_x-q_y*q_y-q_z*q_z
+        e21=2*(q_x*q_y+q_w*q_z)
+        e31=2*(q_x*q_z-q_w*q_y)
+        e32=2*(q_w*q_x+q_y*q_z)
+        e33=q_w*q_w-q_x*q_x-q_y*q_y+q_z*q_z
+        
+        roll_x=math.atan(e32/e33)
+        roll_y=math.asin(-1*e31)
+        roll_z=math.atan(e21/e11)
+        
+        print('\n',roll_x,'\n',roll_y,'\n',roll_z,'\n') 
+        return roll_x,roll_y,roll_z
+        
+          
         
         
        

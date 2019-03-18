@@ -19,7 +19,7 @@ class ctrl:
 	
 	def clear(self):
 		self.dP=[1,1,1]
-		self.motorP=[50,50,50,50]
+		self.motorP=[75,75,75,75]
 		
 	def motor(self,rx,ry,rz):
 		
@@ -44,7 +44,14 @@ class ctrl:
 		self.motorP[1]=self.motorP[1]-self.deuler[0]*self.dP[0]-self.deuler[1]*self.dP[1]+self.deuler[2]*self.dP[2]
 		self.motorP[2]=self.motorP[2]+self.deuler[0]*self.dP[0]-self.deuler[1]*self.dP[1]-self.deuler[2]*self.dP[2]
 		self.motorP[3]=self.motorP[3]+self.deuler[0]*self.dP[0]+self.deuler[1]*self.dP[1]+self.deuler[2]*self.dP[2]
-		#print(self.motorP)
+		
+		for i in range(4):
+			if self.motorP[i] > 100:
+				self.motorP[i]=100
+			elif self.motorP[i]<50:
+				self.motorP[i]=50
+		
+		print(self.motorP)
 		
 		
 		
