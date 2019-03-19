@@ -1,7 +1,13 @@
 #センサーから計算までの処理速度およそ0.013
+""""
+ESCの配線
+茶：グラウンド
+赤：VCC
+黃：信号　
+"""
 
 
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 from time import sleep
 import sys
 
@@ -14,7 +20,9 @@ import time
 
 madgwickAHRS = Madgwick2.MadgwickAHRS(1/256, Madgwick2.Quaternion(1, 0, 0, 0), 1)
 PIDctrl = ctrl.ctrl()
-s=time.time()
+sample_time = 1/64
+current_time = time.time()
+last_time = current_time
 ###
 
 ESC_PORT1 = 16 #ポート番号
@@ -47,6 +55,11 @@ pwm4.start(75)
 
 while True:
 	try:
+		current_time = time.time()
+		delta_time = current_time - last_time
+		if delta_time<1/64:
+			continue
+		
 		#制御量を計算
 		accel = waiacc.get_accel_data()
 		gyro = waiacc.get_gyro_data()
@@ -63,7 +76,9 @@ while True:
 		pwm3.ChangeDutyCycle(motor_power[2])
 		pwm4.ChangeDutyCycle(motor_power[3])
 
-		
+		print(delta_time)
+	
+		last_time=current_time
 		
 	except KeyboardInterrupt:
 		break
