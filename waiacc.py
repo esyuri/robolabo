@@ -45,7 +45,7 @@ bus.write_byte_data(dev_addr_a, ctrl_reg3_a, 0b00001000)
 bus.write_byte_data(dev_addr_a, ctrl_reg4_a, 0b00001000) #1mg/digit
 bus.write_byte_data(dev_addr_a, ctrl_reg5_a, 0b01000000)
 # gyro
-bus.write_byte_data(dev_addr_g, ctrl_reg1_g, 0b00001111)
+#bus.write_byte_data(dev_addr_g, ctrl_reg1_g, 0b00001111)
 bus.write_byte_data(dev_addr_g, ctrl_reg2_g, 0b00000000)
 bus.write_byte_data(dev_addr_g, ctrl_reg3_g, 0b00000000)
 bus.write_byte_data(dev_addr_g, ctrl_reg4_g, 0b00000000) #8.75mdps/digit
@@ -86,5 +86,5 @@ def get_gyro_data():
     return [g_x, g_y, g_z]
 
 #while 1:
-    #print(get_accel_data() + get_gyro_data())
-    #sleep(1/64)
+ #   print(get_accel_data() + get_gyro_data())
+  #  sleep(1)

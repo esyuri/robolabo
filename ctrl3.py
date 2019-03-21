@@ -19,7 +19,7 @@ class ctrl:
 	
 	def clear(self):
 		self.dP=[1,1,1]
-		self.motorP=[60,60,60,60]
+		self.motorP=[60,60,60]
 		
 	def motor(self,rx,ry,rz):
 		
@@ -34,26 +34,32 @@ class ctrl:
 		
 		self.deuler=[d_rx,d_ry,d_rz]
 		
-		kx=1
-		ky=1
-		kz=0.1
+		kx=0.5
+		ky=0.5
+		#kz=0.1
 		
 		"""
-		motor[n]は第ｎ+1象限とする
-		motor0,motor2はroll_zと回転の方向が同じであるとする
-		x回転の調整　[+,+,-,-]
-		y回転の調整　[-,+,+,-]
-		z回転の調整　[+,-,+,-]
+		motor[0] (1,0)
+		motor[1] (-1/2,root3/2)
+		motor[2] (-1/2,-root3/2)
+		x回転の調整　[0,1,-1]
+		y回転の調整　[-1/2,1,1]
+		z回転の調整　[0,0,0] (当てにしない）
+		"""
 		"""
 		self.motorP[0]=self.motorP[0]-kx*self.deuler[0]*self.dP[0]+ky*self.deuler[1]*self.dP[1]-kz*self.deuler[2]*self.dP[2]
 		self.motorP[1]=self.motorP[1]-kx*self.deuler[0]*self.dP[0]-ky*self.deuler[1]*self.dP[1]+kz*self.deuler[2]*self.dP[2]
 		self.motorP[2]=self.motorP[2]+kx*self.deuler[0]*self.dP[0]-ky*self.deuler[1]*self.dP[1]-kz*self.deuler[2]*self.dP[2]
-		self.motorP[3]=self.motorP[3]+kx*self.deuler[0]*self.dP[0]+ky*self.deuler[1]*self.dP[1]+kz*self.deuler[2]*self.dP[2]
+		"""
 		
-		for i in range(4):
+		self.motorP[0]=self.motorP[0]-kx*0*self.deuler[0]*self.dP[0]+ky*1/2*self.deuler[1]*self.dP[1]
+		self.motorP[1]=self.motorP[1]-kx*1*self.deuler[0]*self.dP[0]-ky*1*self.deuler[1]*self.dP[1]
+		self.motorP[2]=self.motorP[2]+kx*1*self.deuler[0]*self.dP[0]-ky*1*self.deuler[1]*self.dP[1]
+		
+		for i in range(3):
 			if self.motorP[i] > 66:
 				self.motorP[i]= 66
 			elif self.motorP[i]<54:
 				self.motorP[i]=54
 		
-		print(self.motorP)
+

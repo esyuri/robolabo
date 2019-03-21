@@ -1,3 +1,5 @@
+#50~95にした時５４から５９の範囲で変わる
+
 import RPi.GPIO as GPIO
 from time import sleep
 import sys
@@ -6,7 +8,8 @@ import time
 
 #GPIO.cleanup()
 
-ESC_PORT1 = 19 #ポート番号
+ESC_PORT1 =20 #ポート番号
+
 TONE = 500 #周波数の指定
 
 # GPIOの設定 各ポートを操作可能にしてる
