@@ -2,6 +2,7 @@
 
 最終的な動作に必要なファイル
 waiacc.py,Madgwick2.py,quaternion.py,PID.py,ctrl3.py,esc3.py
+esc3.pyで実行
 
 waiacc.py 　　　ジャイロセンサから加速度、角速度を出力
 Madgwick2.py　　
@@ -31,9 +32,11 @@ esc.py
 pigpio_pwm.py
   モーター一つを動かすパルス波をESCに送る
   入力値に応じてパルス幅を変更可能
+  テスト用
 pwm.py
   モーターを動かすパルス波を複数のESCに送る
   入力値に応じてパルス幅を変更可能
+  テスト用2
 ctrl3.py,esc3.py
   ctrl.py,esc.pyをモーターを3つで動かす場合のバージョンに変更したもの
   
